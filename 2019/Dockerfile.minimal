@@ -1,0 +1,42 @@
+#
+# https://hub.docker.com/r/thorwink/texlive
+# thorwink/texlive:2019-minimal
+#
+
+ARG UBUNTU_IMG_VERSION=19.04
+FROM ubuntu:$UBUNTU_IMG_VERSION
+LABEL maintainer="Thorsten Winkler <https://github.com/thorsten-winkler>"
+
+ENV TEMPDIR /tmp/install-tl
+WORKDIR $TEMPDIR
+
+ENV PERSISTENT_DEPS \
+    fontconfig \
+    git \
+    perl \
+    vim \
+    wget
+
+ARG TL_PROFILE=texlive-2019-minimal.profile
+COPY $TL_PROFILE .
+
+ENV PATH $PATH:/usr/local/texlive/2019/bin/x86_64-linux
+ENV MANPATH $MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man
+ENV INFOPATH $INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info
+
+RUN apt update -y && apt upgrade -y && mkdir -p /docs && \
+    apt install -y $PERSISTENT_DEPS && \
+    # TL installation
+    wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+    tar xfz install-tl-unx.tar.gz --strip-components=1 && \
+    ./install-tl --profile=$TL_PROFILE
+
+WORKDIR /docs
+
+# Cleanup
+RUN rm -rf $TEMPDIR && \
+    apt autoclean -y && \
+    apt autoremove -y && \
+    apt clean -y && \
+    apt purge -y && \
+    apt remove --purge -y

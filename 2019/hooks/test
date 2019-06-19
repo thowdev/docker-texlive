@@ -1,0 +1,68 @@
+#!/bin/bash
+
+################################################################################
+# Check for correct number of collections in the appropriate Docker image
+RES_MINI=$(docker run --rm thorwink/texlive:2019-minimal bash -c "tlmgr list collections --only-installed | wc -l")
+RES_CUST=$(docker run --rm thorwink/texlive:2019 bash -c "tlmgr list collections --only-installed | wc -l")
+RES_FULL=$(docker run --rm thorwink/texlive:2019-full bash -c "tlmgr list collections --only-installed | wc -l")
+
+if [[ $RES_MINI != 1 ]]; then
+    echo "Mismatch of number of collections in \"thorwink/texlive:2019-minimal\""
+    echo "Expected: 1 / Found: $RES_MINI "
+    exit 1;
+fi
+
+if [[ $RES_CUST != 25 ]]; then
+    echo "Mismatch of number of collections in \"thorwink/texlive:2019\""
+    echo "Expected: 25 / Found: $RES_CUST "
+    exit 1;
+fi
+
+if [[ $RES_FULL != 40 ]]; then
+    echo "Mismatch of number of collections in \"thorwink/texlive:2019-full\""
+    echo "Expected: 40 / Found: $RES_FULL "
+    exit 1;
+fi
+
+################################################################################
+# Check return codes of specific commands in the appropriate Docker image
+########################################
+# thorwink/texlive:2019-minimal
+docker run --rm thorwink/texlive:2019-minimal tlmgr --help
+RC_MINI=$?
+if [[ $RC_MINI != 0 ]]; then
+    echo "Run tlmgr in \"thorwink/texlive:2019-minimal\" failed "
+    exit $RC_MINI;
+fi
+
+########################################
+# thorwink/texlive:2019 / thorwink/texlive:latest
+docker run --rm thorwink/texlive:2019 latex small2e
+RC_CUST=$?
+if [[ $RC_CUST != 0 ]]; then
+    echo "Run latex in \"thorwink/texlive:2019\" failed "
+    exit $RC_CUST;
+fi
+
+docker run --rm thorwink/texlive:latest pdflatex small2e
+RC_CUST=$?
+if [[ $RC_CUST != 0 ]]; then
+    echo "Run latex in \"thorwink/texlive:2019\" failed "
+    exit $RC_CUST;
+fi
+
+########################################
+# thorwink/texlive:2019-full
+docker run --rm thorwink/texlive:2019-full latex small2e
+RC_FULL=$?
+if [[ $RC_FULL != 0 ]]; then
+    echo "Run latex in \"thorwink/texlive:2019-full\" failed "
+    exit $RC_FULL;
+fi
+
+docker run --rm thorwink/texlive:2019-full pdflatex small2e
+RC_FULL=$?
+if [[ $RC_FULL != 0 ]]; then
+    echo "Run latex in \"thorwink/texlive:2019-full\" failed "
+    exit $RC_FULL;
+fi

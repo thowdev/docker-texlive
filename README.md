@@ -5,3 +5,4 @@ Docker images. It will regularly updated and at least for every new TeX Live
 version a new Docker image will be provided:
 
 * [TeX Live 2019](https://hub.docker.com/r/thorwink/texlive)
+* [TeX Live 2020](https://hub.docker.com/r/thorwink/texlive)

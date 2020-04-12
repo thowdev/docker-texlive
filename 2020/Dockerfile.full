@@ -1,0 +1,11 @@
+#
+# https://hub.docker.com/r/thorwink/texlive
+# thorwink/texlive:2020-full
+#
+
+FROM thorwink/texlive:2020
+LABEL maintainer="Thorsten Winkler <https://github.com/thorsten-winkler>"
+
+RUN apt update -y && apt upgrade -y && \
+    tlmgr update --self && \
+    tlmgr install scheme-full

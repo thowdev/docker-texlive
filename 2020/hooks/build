@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+docker build -f Dockerfile.minimal -t thorwink/texlive:2020-minimal .
+docker push thorwink/texlive:2020-minimal
+
+docker build -f Dockerfile.custom -t thorwink/texlive:2020 .
+docker push thorwink/texlive:2020
+docker tag thorwink/texlive:2020 thorwink/texlive:latest
+docker push thorwink/texlive:latest
+
+docker build -f Dockerfile.full -t thorwink/texlive:2020-full .
+docker push thorwink/texlive:2020-full

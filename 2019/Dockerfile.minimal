@@ -13,6 +13,7 @@ WORKDIR $TEMPDIR
 ENV PERSISTENT_DEPS \
     fontconfig \
     git \
+    gpg \
     perl \
     vim \
     wget

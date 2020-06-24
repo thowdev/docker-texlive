@@ -3,7 +3,7 @@
 # thorwink/texlive:2020-minimal
 #
 
-ARG UBUNTU_IMG_VERSION=19.04
+ARG UBUNTU_IMG_VERSION=20.04
 FROM ubuntu:$UBUNTU_IMG_VERSION
 LABEL maintainer="Thorsten Winkler <https://github.com/thorsten-winkler>"
 
